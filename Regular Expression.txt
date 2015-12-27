@@ -1,0 +1,751 @@
+//Program gets a regular expression as input and generates
+//  nfa -with epsilon
+//  nfa  without epsilon
+//  dfa
+
+// output will be states & transition from each state
+
+// This program was designed in gnu-c++ and works perfectly in linux or unix
+// however windows is having problems running the program for large inputs
+// so try 2 make the input less than say 10 characters
+
+//the program does not work for redundant kleene stars  eg 0**, (0*)*
+//instead 0** and (0*)* can and should be written as 0*
+
+//also strings like (b*+1+a.....)*, will produce b**+1*+a*...  on expansion
+//which will not be accepted due to b** , so expressions of this form
+//can and should be written as (b+1+a....)*
+
+//as a general rule if u have a single character * within a braketted * of
+//+(unions), remove all * inside the bracket
+// eg ((0+1)*+b)*  is and should be written as (0+1+b)*
+
+// give the input without any space between them eg (0+1)*  or (a+b)*
+// abc or (aad+ccd)* or abc* or (ab+cd) or (d*c) or (cd*) or (cd*)*  etc
+
+//output is precent in file  output.txt
+// for the nfa without e, some states which are not necessary will b
+//missing , do not worry ,just draw the automaton with the given states
+
+//report any bugs u find to the author NARENDRAN SANJAY (legend666@rediffmail.com)
+//the author is reachable through mail in case u need further technical assistance
+
+
+#include<iostream.h>
+//#include<conio.h>
+#include<stdio.h>
+//#include<iomanip.h>
+
+FILE *f5=fopen("output.txt","w+");//do not include this line for linux(gnu cpp)
+// and change all fprintf to printf ,
+//also remove variable f5 for linux compatability
+
+
+int v1=0;
+int final[20];
+int f=0;
+
+struct se
+{
+char n;
+int arr[20];
+int max1;
+
+int search2(int x)
+{	int i;
+	for(i=0;i<max1;i++)
+	if(arr[i]==x)return 1;
+	return 0;
+}
+
+};
+
+
+struct nfa
+{
+int name;
+se set1[20];
+int max2;
+
+
+void add(char x,int y)
+{
+	if(search1(x)==0)
+	{
+	   set1[max2].n=x;
+	   set1[max2].arr[0]=y;
+	   set1[max2].max1++;
+	   max2++;
+	}
+	else
+	{
+		int ppp;
+		for(ppp=0;ppp<max2;ppp++)
+		{
+			if(set1[ppp].n==x)
+			{
+				if(set1[ppp].search2(y)==0)
+				{set1[ppp].arr[set1[ppp].max1]=y;
+				set1[ppp].max1++;
+				break;
+				}
+			}
+		}
+	}
+
+}
+
+int search1(char z)
+{
+	int pp;
+	for(pp=0;pp<max2;pp++)
+		if(set1[pp].n==z)return 1;
+	return 0;
+}
+
+
+
+
+}av1[20];
+
+int h2=0;
+
+//-------------------------------------------------------------------
+//-------------------------------------------------------------------
+
+struct se2
+{
+char n;
+int n1;
+int max1;
+int arr[20];
+
+	int search5(int x)
+	{	int i;
+		for(i=0;i<max1;i++)
+		if(arr[i]==x)return 1;
+		return 0;
+	}
+
+};
+
+
+struct fs
+{
+	int name;
+	int id[20];
+	int idmax;
+	se2 set2[20];
+	int setmax;
+
+	void sortid()
+	{
+		int i;
+		for(i=1;i<idmax;i++)
+		{
+			if(id[i]<id[i-1])
+			{
+				int temp=id[i];
+				id[i]=id[i-1];
+				id[i-1]=temp;
+
+				i=i-2;
+
+			 }
+		 }
+	  }
+
+
+	  int compid(int x[],int y)
+	  {
+		if(y==idmax)
+		{
+			int j;
+			for(j=0;j<idmax;j++)
+			if(x[j]!=id[j])return 1;
+
+			return 0;
+		}
+		else
+		return 1;
+
+
+
+	   }
+
+	   /////////////////////////////////////////////////////////////
+
+		void add(char x,int y)
+	{
+		if(search7(x)==0)
+		{
+		   set2[setmax].n=x;
+		   set2[setmax].arr[0]=y;
+		   set2[setmax].max1++;
+		   setmax++;
+		}
+		else
+		{
+			int ppp;
+			for(ppp=0;ppp<setmax;ppp++)
+			{
+				if(set2[ppp].n==x)
+				{
+					if(set2[ppp].search5(y)==0)
+					{set2[ppp].arr[set2[ppp].max1]=y;
+					set2[ppp].max1++;
+					break;
+					}
+				}
+			}
+		}
+
+	}
+
+
+int search7(char z)
+{
+	int pp;
+	for(pp=0;pp<setmax;pp++)if(set2[pp].n==z)return 1;
+	return 0;
+}
+
+
+	   //////////////////////////////////////////////////////////////
+
+
+}av2[20];
+
+int v2=1;
+
+
+int search4(int x[],int y)
+{
+	int i;
+	for(i=1;i<v2;i++)
+	if(av2[i].compid(x,y)==0)return 1;
+	return 0;
+}
+
+
+
+
+int formfsa(int x[],int y)
+{
+ //------sort x[]------------
+
+int i;
+ for(i=1;i<y;i++)
+ {
+	if(x[i]<x[i-1])
+	{	int temp;
+		temp=x[i];
+		x[i]=x[i-1];
+		x[i-1]=temp;
+		i=i-2;
+	}
+
+  }
+
+  //-----compare-------------
+  if(search4(x,y)==1)
+  {
+	  int ii;
+	for(ii=1;ii<v2;ii++)
+	if(av2[ii].compid(x,y)==0)
+	return av2[ii].name;
+  }
+
+  else
+  {
+		av2[v2].name=v2;
+		av2[v2].idmax=y;
+
+		int kk;
+		for(kk=0;kk<y;kk++)
+		av2[v2].id[kk]=x[kk];
+
+
+		for(kk=0;kk<av2[v2].idmax;kk++)
+		{
+			int ll;
+			for(ll=0;ll<v1;ll++)
+			{
+				if(av1[ll].name==av2[v2].id[kk])
+				{
+					int mm;
+					for(mm=0;mm<av1[ll].max2;mm++)
+					{
+						int nn;
+						for(nn=0;nn<av1[ll].set1[mm].max1;nn++)
+						{
+							av2[v2].add(av1[ll].set1[mm].n,av1[ll].set1[mm].arr[nn]);
+
+						}
+					 }
+
+					 break;
+				 }
+
+			  }
+		}
+
+
+		int santemp=v2;
+		v2++;
+
+		int oo;
+		for(oo=0;oo<av2[santemp].setmax;oo++)
+		{
+		 av2[santemp].set2[oo].n1=formfsa(av2[santemp].set2[oo].arr,av2[santemp].set2[oo].max1);
+		}
+
+		return santemp;
+
+   }
+
+
+}
+
+//---------------------------------------------------------------------
+//---------------------------------------------------------------------
+
+struct aut
+{
+int name;
+aut *ep1;
+aut *ep2;
+char c1;
+aut *c2;
+aut *fin;
+int eclose[100];
+int max;
+
+
+void assign(int name,aut *gep1=NULL,aut *gep2=NULL,char c1='\0',aut *c2=NULL,aut *fin=NULL)
+{
+	aut::name=name;
+	aut::ep1=gep1;
+	aut::ep2=gep2;
+	aut::c1=c1;
+	aut::c2=c2;
+	aut::fin=fin;
+
+}
+
+void add(int x)
+	{   int j=0;
+		int i;
+		for(i=0;i<max;i++)
+		{	if(eclose[i]==x)
+			{j=1;break;}
+		}
+		if(j==0)
+		{eclose[max]=x;	max++;
+		}
+	}
+
+void add1(int *y,int m)
+	{
+		int ii;
+		for(ii=0;ii<m;ii++)
+		{
+		add(*(y+ii));
+		}
+	}
+
+
+void findeclose()
+{
+	add(aut::name);
+
+	if(ep1!=NULL)
+	{	(*ep1).findeclose();
+		add1((*ep1).eclose,(*ep1).max);
+	}
+
+	if(ep2!=NULL)
+	{	(*ep2).findeclose();
+		add1((*ep2).eclose,(*ep2).max);
+	}
+
+}
+
+}p1[100];
+
+//---------------------------------------------------------------------
+
+struct ch
+{
+ char a;
+ aut* b;
+};
+
+aut* formaut(ch z1[]);
+
+//--------------------------------------------------------------------------
+
+void substr(ch a1[],ch a2[],int i,int j)
+{
+	int k,l;
+	   for(k=i,l=0;k<=j;k++,l++)
+	   {
+	   a2[l].a=a1[k].a;
+		a2[l].b=a1[k].b;
+	   }
+
+a2[l].a='\0';
+a2[l].b=NULL;
+
+}
+
+//-------------------------------------------------------------------
+
+int stlen(ch a1[])
+{
+	int i;
+	   for(i=0;;i++)
+	   if(a1[i].a=='\0')return i;
+}
+
+//-------------------------------------------------------------------------
+
+void replace(ch a1[],int i,int j,aut* f)
+{
+int l;
+l=stlen(a1);
+a1[i].a='#';
+a1[i].b=f;
+
+	int x,k1;
+	for(x=j+1,k1=i+1;x<=l;x++,k1++)
+	a1[k1]=a1[x];
+
+}
+
+//---------------------------------------------------------------------------
+
+int find(ch a1[],int j)
+{
+
+	int i,k;
+for(i=j+1,k=1;i<stlen(a1);i++)
+{
+	if(a1[i].a==')')k--;
+	if(a1[i].a=='(')k++;
+	if(k==0)return i;
+}
+return -1;
+}
+//-------------------------------------------------------------------
+int search(int x)
+{
+	int i;
+for(i=0;i<v1;i++)
+if(av1[i].name==x)return 1;
+return 0;
+}
+
+//--------------------------------------------------------------------
+
+void display(int d)
+{
+
+if(search(d)==0)
+{
+
+av1[v1].name=d;
+
+	int i;
+	for(i=0;i<p1[d].max;i++)
+	{
+		if(p1[p1[d].eclose[i]].c1!='\0')
+		{
+		//	cout<<"\n from : "<<p1[d].name<<" -->> : "<<p1[p1[d].eclose[i]].c2->name<<"   on : "<<p1[p1[d].eclose[i]].c1;
+		fprintf(f5,"\n from state : %-5d  to state : %-5d    on input : %5c\n",p1[d].name,p1[p1[d].eclose[i]].c2->name,p1[p1[d].eclose[i]].c1);
+
+
+		av1[v1].add(p1[p1[d].eclose[i]].c1,p1[p1[d].eclose[i]].c2->name);
+		}
+	}
+
+v1++;
+
+for(i=0;i<p1[d].max;i++)
+	{
+		if(p1[p1[d].eclose[i]].c1!='\0')
+		{
+		display(p1[p1[d].eclose[i]].c2->name);
+		}
+	}
+
+
+}
+}
+//=====================================================================
+aut *e;
+
+void main()
+{
+//clrscr();//not included for unix or linux
+ch a[100];
+
+printf("\nENTER A REGULAR EXPRESSION :  ");
+fprintf(f5,"REGULAR EXPRESSION :  ");
+//----------------------------------------------------------------------
+int i;
+for(i=0;(a[i].a=getc(stdin))!=10;i++)
+{
+fprintf(f5,"%c",a[i].a);
+a[i].b=NULL;
+}
+a[i].a='\0';
+a[i].b=NULL;
+
+//-----------------------------------------------------------------------
+
+e=formaut(a);
+//p1[2].findeclose();
+//(*e).findeclose();
+fprintf(f5,"\n\nNFA WITH EPSILON TRANSITION\n");
+fprintf(f5,"\nFrom     on       to           e-transitions              e-closure \n");
+fprintf(f5,"state    input    state\n\n");
+int t;
+for(t=1;t<=h2;t++)
+p1[t].findeclose();
+
+for( t=1;t<=h2;t++)
+{
+//cout<<endl<<p1[t].name<<"\t"<<p1[t].c1<<setw(5)<<p1[t].c2->name<<setw(10)<<p1[t].ep1->name<<setw(5)<<p1[t].ep2->name<<setw(10)<<" ";
+//printf("\n %5d %5c %5d %5d %5d",p1[t].name,p1[t].c1,p1[t].c2->name,p1[t].ep1->name,p1[t].ep2->name);
+	fprintf(f5,"%-10d %1c ",p1[t].name,p1[t].c1);
+
+	if(p1[t].c2!=NULL)fprintf(f5,"%8d\t",p1[t].c2->name);
+	else fprintf(f5,"      \t");
+	if(p1[t].ep1!=NULL)fprintf(f5,"%10d",p1[t].ep1->name);
+	else fprintf(f5,"          ");
+	if(p1[t].ep2!=NULL)fprintf(f5,"%7d",p1[t].ep2->name);
+	else fprintf(f5,"       ");
+	fprintf(f5,"\t        ");
+
+
+int tt;
+for(tt=0;tt<p1[t].max;tt++)
+fprintf(f5,"%4d",p1[t].eclose[tt]);
+
+fprintf(f5,"\n--------------------------------------------------------------------------\n");
+}
+
+fprintf(f5,"\n\nstart state : %-10d  final state :  %-10d",(*e).name,(*e).fin->name);
+fprintf(f5,"\n\n\n============================================================================");
+fprintf(f5,"\n\nNFA WITHOUT EPSILON\n");
+display((*e).name);
+
+fprintf(f5,"\n\n\nstart state :  %-10d",(*e).name);
+fprintf(f5,"\n\nFINAL STATES : ");
+int aaa;
+for(aaa=0;aaa<v1;aaa++)
+{
+	int jj;
+	for(jj=0;jj<p1[av1[aaa].name].max;jj++)
+	{
+	if(p1[av1[aaa].name].eclose[jj]==(*e).fin->name)
+	{
+		fprintf(f5,"\t%5d",p1[av1[aaa].name].name);
+
+		final[f]=p1[av1[aaa].name].name;
+		f++;
+	}
+	}
+}
+
+fprintf(f5,"\n\n");
+
+//for(i=0;i<v1;i++)
+//{
+//cout<<endl<<av1[i].name;
+//for(int jj=0;jj<av1[i].max2;jj++)
+//{	cout<<" # "<<av1[i].set1[jj].n<<"$";
+	//for(int dd=0;dd<av1[i].set1[jj].max1;dd++)
+	//cout<<"  "<<av1[i].set1[jj].arr[dd]<<"  ";
+	//cout<<"$";
+
+//}
+//}
+int gg[100];
+gg[0]=av1[0].name;
+int len=1;
+
+int start=formfsa(gg,len);
+fprintf(f5,"\n\n\n=========================================================================");
+fprintf(f5,"\n\n DFA\n\n\n");
+//cout<<endl<<" fsa \n";
+int jj;
+for(jj=1;jj<v2;jj++)
+{
+  //cout<<av2[jj].name<<"--";
+  //for(int bb=0;bb<av2[jj].idmax;bb++)
+  //cout<<av2[jj].id[bb]<<"-";
+  //cout<<"#";
+  for(int cc=0;cc<av2[jj].setmax;cc++)
+
+  {//cout<<"fr :"<<av2[jj].name<<" on :"<<av2[jj].set2[cc].n<<"   to :"<<av2[jj].set2[cc].n1;
+  //cout<<"from :  "<<av2[jj].name<<"-->>  "<<av2[jj].set2[cc].n1<<"   on : "<<av2[jj].set2[cc].n;
+  fprintf(f5,"from state :  %-10d  to state %-10d   on input : %10c\n\n",av2[jj].name,av2[jj].set2[cc].n1,av2[jj].set2[cc].n);
+  //cout<<endl;
+  }
+}
+
+fprintf(f5,"\n\n\nSTART : %-10d\t",start);
+
+fprintf(f5,"\n\nFINAL :");
+for(jj=1;jj<v2;jj++)
+{
+	for(int bb=0;bb<f;bb++)
+	{
+	   for(int cc=0;cc<av2[jj].idmax;cc++)
+	   {
+			if(av2[jj].id[cc]==final[bb])
+			{
+			fprintf(f5,"\t %5d",av2[jj].name);
+			jj++;
+			break;
+			}
+		}
+	 }
+}
+
+fprintf(f5,"\n\n\n");
+
+printf("\n for output see file named   output.txt  in the same directory ");
+//getch();//removed for linux compatability
+return i;
+}
+
+
+//=====================form automaton=================================
+
+aut* formaut(ch z1[])
+{
+int y1,k1,k2;
+
+//----------------------brackets-----------------------------
+
+if(stlen(z1)>1)
+{
+for(int i=0;i<stlen(z1);i++)
+{
+	if(z1[i].a=='(')
+	{
+		y1=find(z1,i);
+		ch z2[100];
+
+	   substr(z1,z2,i+1,y1-1);
+
+	   replace(z1,i,y1,formaut(z2));
+	 }
+}
+}
+
+//-----------------------kleene *-----------------------------
+
+if(stlen(z1)>1)
+{
+for(int i2=0;i2<stlen(z1);i2++)
+{
+	if(z1[i2].a=='*')
+	{
+		  ch z3[100];
+		  substr(z1,z3,i2-1,i2-1);
+
+	  h2++;	  k1=h2;
+	  h2++;   k2=h2;
+
+	  p1[k2].assign(k2,NULL);
+	  p1[k1].assign(k1,formaut(z3),&p1[k2],'\0',NULL,&p1[k2]);
+
+		 p1[k1].ep1->fin->ep2=&p1[k2];
+		 p1[k1].ep1->fin->ep1=p1[k1].ep1;
+
+	  replace(z1,i2-1,i2,&p1[k1]);
+
+	  i2--;
+	 }
+}
+}
+
+//------------------------plus---------------------------------
+
+if(stlen(z1)>1)
+{
+for(int i1=0;i1<stlen(z1);i1++)
+{
+	if(z1[i1].a=='+')
+	{
+		ch z4[100],z5[100];
+
+	   substr(z1,z4,0,i1-1);
+		substr(z1,z5,i1+1,stlen(z1)-1);
+
+	  h2++;	  k1=h2;
+	  h2++;	  k2=h2;
+
+	  p1[k2].assign(k2);
+	  p1[k1].assign(k1,formaut(z4),formaut(z5),'\0',NULL,&p1[k2]);
+
+	  p1[k1].ep1->fin->ep2=&p1[k2];
+	  p1[k1].ep2->fin->ep2=&p1[k2];
+
+	  replace(z1,0,stlen(z1)-1,&p1[k1]);
+
+		return &p1[k1];
+	 }
+}
+}
+
+//-------------------------cancat-------------------------------
+
+if(stlen(z1)>1)
+{
+ch z6[100],z7[100];
+
+substr(z1,z6,0,0);
+substr(z1,z7,1,stlen(z1)-1);
+
+aut *au1,*au2;
+au1=formaut(z6);
+au2=formaut(z7);
+
+(*au1).fin->ep2=au2;
+(*au1).fin=(*au2).fin;
+
+replace(z1,0,stlen(z1),au1);
+
+return au1;
+}
+
+//------------------------primitives---------------------------------
+
+if(stlen(z1)==1)
+{
+	if(z1[0].a=='#'&& z1[0].b!=NULL)
+	return z1[0].b;
+
+
+	   else
+	{
+
+	   h2++;  k1=h2;
+	   h2++;  k2=h2;
+
+	   p1[k2].assign(k2);
+	   p1[k1].assign(k1,NULL,NULL,z1[0].a,&p1[k2],&p1[k2]);
+
+replace(z1,0,0,&p1[k1]);
+
+	   return &p1[k1];
+
+	   }
+}
+
+}
